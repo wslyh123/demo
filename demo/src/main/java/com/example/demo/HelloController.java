@@ -1,12 +1,16 @@
 package com.example.demo;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import org.apache.log4j.Logger;
 
@@ -21,11 +25,19 @@ public class HelloController {
 
     @Autowired
     private DiscoveryClient client;
+    @Autowired
+    private KafkaTemplate kafkaTemplate;
 
     @Value("${author.name}")
     private String name;
     @Value("${author.qq}")
     private String qq;
+
+    @RequestMapping(value = "/kafka/{str}", method = RequestMethod.GET)
+    public String kafka(@PathVariable(required = false) String str) {
+        kafkaTemplate.send("test1",str);
+        return str;
+    }
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String index () {
@@ -50,5 +62,9 @@ public class HelloController {
         }
         logger.info("/hello, host:"+instance.getHost()+", service_id:"+instance.getServiceId());
         return "Hello World! The author is " + this.name + " and qq is " + qq + "." + name;
+    }
+    @KafkaListener(topics = {"test1"})
+    public void ConsumerListener(ConsumerRecord<?, ?> cr) throws Exception {
+        logger.info(cr.toString());
     }
 }
