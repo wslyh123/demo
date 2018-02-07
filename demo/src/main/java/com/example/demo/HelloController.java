@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -48,6 +50,8 @@ public class HelloController {
 //            }
 //        });
 //        hiddenFiles = new File(".").listFiles(File :: isHidden);
+//        List<String> list = new ArrayList<>();
+//        list.forEach(System.out::println);
         ServiceInstance instance = client.getLocalServiceInstance();
         int sleepTime = new Random().nextInt(3000);
         logger.info("Now the thread will sleep :" + sleepTime);
