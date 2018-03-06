@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,8 @@ public class HelloController {
     private DiscoveryClient client;
     @Autowired
     private KafkaTemplate kafkaTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Value("${author.name}")
     private String name;
@@ -39,6 +42,11 @@ public class HelloController {
     public String kafka(@PathVariable(required = false) String str) {
         kafkaTemplate.send("test1",str);
         return str;
+    }
+    @RequestMapping(value = "/redis", method = RequestMethod.GET)
+    public String redisTest () {
+        stringRedisTemplate.opsForValue().set("demo","111");
+        return "success";
     }
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
