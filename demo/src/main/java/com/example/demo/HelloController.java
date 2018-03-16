@@ -43,10 +43,10 @@ public class HelloController {
         kafkaTemplate.send("test1",str);
         return str;
     }
-    @RequestMapping(value = "/redis", method = RequestMethod.GET)
-    public String redisTest () {
-        stringRedisTemplate.opsForValue().set("demo","111");
-        return "success";
+    @RequestMapping(value = "/redis/{str}", method = RequestMethod.GET)
+    public String redisTest (@PathVariable(required = false) String str) {
+        stringRedisTemplate.opsForValue().set("demo",str);
+        return "success: demo is " + str;
     }
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
