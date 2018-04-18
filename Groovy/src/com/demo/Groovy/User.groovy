@@ -10,7 +10,8 @@ class User{
     LocalDate birth
     List<Book> myBooks
     static void main(String[] args){
-        Book book = new Book("id":10, "name":"wslyh123")
+        def book = new Book("id":10, "name":"wslyh123")
+        //判断对象是否未空的?.
         Long id = book?.id
         println(id)
         List<Book> books = new ArrayList<>()
